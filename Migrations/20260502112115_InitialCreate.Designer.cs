@@ -11,7 +11,7 @@ using UserManagementSystem.Data;
 
 namespace UserManagementSystem.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20260502112115_InitialCreate")]
     partial class InitialCreate
     {
