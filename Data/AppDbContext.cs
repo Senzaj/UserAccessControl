@@ -93,8 +93,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<Role>().HasData(
             new Role { Id = adminRoleId, Name = "Admin", Description = "Full access to all resources" },
             new Role { Id = seniorRoleId, Name = "Senior", Description = "CRU on projects and tasks (no delete)" },
-            new Role { Id = middleRoleId, Name = "Middle", Description = "Read projects; read, create tasks" },
-            new Role { Id = juniorRoleId, Name = "Junior", Description = "Read tasks only" }
+            new Role { Id = middleRoleId, Name = "Middle", Description = "Read projects; read, create, update tasks" },
+            new Role { Id = juniorRoleId, Name = "Junior", Description = "Read, update tasks only" }
         );
 
         modelBuilder.Entity<RolePermission>().HasData(
@@ -123,13 +123,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             new RolePermission { RoleId = juniorRoleId, PermissionId = taskUpdate }
         );
         
-        //TODO: Хэши паролей (плейсхолдеры, сгенерировать реальные через BCrypt)
         modelBuilder.Entity<User>().HasData(
             new User
             {
                 Id = adminUserId,
                 Email = "admin@example.com",
-                PasswordHash = "$2a$11$K7sFYXGVg6QF4e7jCzMhL.u1VYB1Z0B8k9xVqmXvqXRGc5b8YJdZa", // Admin@123
+                PasswordHash = "$2a$12$W0mAEZaXT04fCDArZAUgTuWXWgNDzLujpSdLPHc/aKNO9Wg9XIVh.", //Admin@123
                 FirstName = "Admin",
                 LastName = "User",
                 IsActive = true,
@@ -139,7 +138,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             {
                 Id = seniorUserId,
                 Email = "senior@example.com",
-                PasswordHash = "$2a$11$...", // Senior@123
+                PasswordHash = "$2a$12$/ZORaw1igN78hU7rng02De9X5addoVGiuzDS9KWW5AnNpfYiyimk.", //Senior@123
                 FirstName = "Senior",
                 LastName = "User",
                 IsActive = true,
@@ -149,7 +148,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             {
                 Id = middleUserId,
                 Email = "middle@example.com",
-                PasswordHash = "$2a$11$...", // Middle@123
+                PasswordHash = "$2a$12$3ua2bja2pESTfGopHbluxOLC7xiEg7JawUonhCxka5u8CtxuWCP0S", //Middle@123
                 FirstName = "Middle",
                 LastName = "User",
                 IsActive = true,
@@ -159,7 +158,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             {
                 Id = juniorUserId,
                 Email = "junior@example.com",
-                PasswordHash = "$2a$11$...", // Junior@123
+                PasswordHash = "$2a$12$OOniy8OM1U6th0PebX95oODhjgvMe5m6bNsKf7DMDuRo6BPxkm3XG", //Junior@123
                 FirstName = "Junior",
                 LastName = "User",
                 IsActive = true,

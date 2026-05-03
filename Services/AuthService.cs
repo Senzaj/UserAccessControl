@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using UserManagementSystem.Configuration;
@@ -22,7 +22,7 @@ public class AuthService(AppDbContext dbContext, IOptions<JwtSettings> jwtOption
             throw new Exception("Passwords do not match");
 
         if (_dbContext.Users.Any(u => u.Email == request.Email))
-            throw new InvalidOperationException("Email is already in use");
+            throw new Exception("Email is already in use");
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
         var user = new User
@@ -42,12 +42,31 @@ public class AuthService(AppDbContext dbContext, IOptions<JwtSettings> jwtOption
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
-        throw new NotImplementedException();
+        var user = await _dbContext.Users
+                       .Include(u => u.UserRoles)
+                       .ThenInclude(ur => ur.Role)
+                       .SingleOrDefaultAsync(u => u.Email == request.Email)
+                    ??  throw new InvalidOperationException("No user found");
+        
+        if (!user.IsActive)
+            throw new InvalidOperationException("User is deleted");
+            
+        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            throw new InvalidOperationException("Passwords do not match");
+        
+        return new AuthResponse(GenerateJwtToken(user), await GetUserById(user.Id));
     }
 
     public async Task<UserResponse> GetUserById(Guid id)
     {
-        throw new NotImplementedException();
+        var user = await _dbContext.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .SingleAsync(u => u.Id == id)
+                    ?? throw new KeyNotFoundException();
+        
+        return new UserResponse(user.Id, user.Email, user.FirstName, user.LastName,
+            user.IsActive, user.CreatedAt, user.UserRoles.Select(ur => ur.Role.Name).ToList());
     }
 
     private string GenerateJwtToken(User user)
@@ -57,10 +76,9 @@ public class AuthService(AppDbContext dbContext, IOptions<JwtSettings> jwtOption
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
         };
-
-#if false
-        claims.AddRange(user.UserRoles.Select(ur => new Claim(ClaimTypes.Role, ur.Role.Name)));
-#endif
+        
+        if (user.UserRoles is not null)
+            claims.AddRange(user.UserRoles.Select(ur => new Claim(ClaimTypes.Role, ur.Role.Name)));
 
         var jwt = new JwtSecurityToken(
             issuer: _jwtSettings.Issuer,

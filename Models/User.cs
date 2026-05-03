@@ -33,5 +33,5 @@ public class User
     [Column("user_created_at")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
-    public virtual ICollection<UserRole> UserRoles { get; set; }
+    public virtual ICollection<UserRole>? UserRoles { get; set; }
 }
