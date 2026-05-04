@@ -66,7 +66,8 @@ public class AuthService(AppDbContext dbContext, IOptions<JwtSettings> jwtOption
                     ?? throw new KeyNotFoundException();
         
         return new UserResponse(user.Id, user.Email, user.FirstName, user.LastName,
-            user.IsActive, user.CreatedAt, user.UserRoles.Select(ur => ur.Role.Name).ToList());
+            user.IsActive, user.CreatedAt, (user.UserRoles ?? throw new ArgumentNullException())
+            .Select(ur => ur.Role.Name).ToList());
     }
 
     private string GenerateJwtToken(User user)
