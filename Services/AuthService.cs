@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using UserManagementSystem.Configuration;
 using UserManagementSystem.Data;
 using UserManagementSystem.DTOs;
+using UserManagementSystem.DTOs.Authentication;
 using UserManagementSystem.Models;
 using UserManagementSystem.Services.Interfaces;
 
@@ -43,7 +44,7 @@ public class AuthService(AppDbContext dbContext, IOptions<JwtSettings> jwtOption
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
         var user = await _dbContext.Users
-                       .Include(u => u.UserRoles)
+                       .Include(u => u.UserRoles)!
                        .ThenInclude(ur => ur.Role)
                        .SingleOrDefaultAsync(u => u.Email == request.Email)
                     ??  throw new InvalidOperationException("No user found");
@@ -59,10 +60,10 @@ public class AuthService(AppDbContext dbContext, IOptions<JwtSettings> jwtOption
 
     public async Task<UserResponse> GetUserById(Guid id)
     {
-        var user = await _dbContext.Users
-                .Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
-                .SingleAsync(u => u.Id == id)
+        var user = await _dbContext.Users.
+                       Include(u => u.UserRoles)!
+                       .ThenInclude(ur => ur.Role)
+                       .SingleAsync(u => u.Id == id)
                     ?? throw new KeyNotFoundException();
         
         return new UserResponse(user.Id, user.Email, user.FirstName, user.LastName,

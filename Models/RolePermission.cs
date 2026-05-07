@@ -3,10 +3,16 @@
 namespace UserManagementSystem.Models;
 
 [Table("role_permissions")]
-public class RolePermission
+public class RolePermission()
 {
+    public RolePermission(Guid roleId, Guid permissionId) : this()
+    {
+        RoleId = roleId;
+        PermissionId = permissionId;
+    }
+
     [Column("role_id")]
-    public Guid RoleId { get; set; }
+    public Guid RoleId { get; set; } 
     
     [Column("permission_id")]
     public Guid PermissionId { get; set; }

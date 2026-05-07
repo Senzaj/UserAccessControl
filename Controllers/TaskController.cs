@@ -9,26 +9,31 @@ public class TaskController: ControllerBase
 {
     [HttpGet]
     [ProducesResponseType(200)]
+    [ProducesResponseType(403)]
     [PermissionAuthorize("Task", "Read")]
     public IActionResult GetTasks() => Ok("Task list");
 
     [HttpGet("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(403)]
     [PermissionAuthorize("Task", "Read")]
     public IActionResult GetTask(int id) => Ok($"Task {id}");
 
     [HttpPost]
     [ProducesResponseType(201)]
+    [ProducesResponseType(403)]
     [PermissionAuthorize("Task", "Create")]
     public IActionResult CreateTask() => StatusCode(201, "Task created");
 
     [HttpPut("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(403)]
     [PermissionAuthorize("Task", "Update")]
     public IActionResult UpdateTask(int id) => Ok($"Task {id} updated");
 
     [HttpDelete("{id}")]
     [ProducesResponseType(200)]
+    [ProducesResponseType(403)]
     [PermissionAuthorize("Task", "Delete")]
     public IActionResult DeleteTask(int id) => Ok($"Task {id} deleted");
 }

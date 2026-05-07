@@ -69,6 +69,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         var middleUserId = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc");
         var juniorUserId = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd");
 
+        var roleManage = Guid.Parse("10000000-0000-0000-0000-000000000000");
+        
         var projRead = Guid.Parse("20000000-0000-0000-0000-000000000001");
         var projCreate = Guid.Parse("20000000-0000-0000-0000-000000000002");
         var projUpdate = Guid.Parse("20000000-0000-0000-0000-000000000003");
@@ -80,6 +82,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         var taskDelete = Guid.Parse("30000000-0000-0000-0000-000000000004");
 
         modelBuilder.Entity<Permission>().HasData(
+            new Permission {Id = roleManage, Resource = "Role", Action = "Manage"},
             new Permission { Id = projRead, Resource = "Project", Action = "Read" },
             new Permission { Id = projCreate, Resource = "Project", Action = "Create" },
             new Permission { Id = projUpdate, Resource = "Project", Action = "Update" },
@@ -98,6 +101,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         );
 
         modelBuilder.Entity<RolePermission>().HasData(
+            new RolePermission { RoleId = adminRoleId, PermissionId = roleManage },
             new RolePermission { RoleId = adminRoleId, PermissionId = projCreate },
             new RolePermission { RoleId = adminRoleId, PermissionId = projRead },
             new RolePermission { RoleId = adminRoleId, PermissionId = projUpdate },

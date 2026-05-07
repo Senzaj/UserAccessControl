@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UserManagementSystem.DTOs;
+using UserManagementSystem.DTOs.Authentication;
 using UserManagementSystem.Services.Interfaces;
 
 namespace UserManagementSystem.Controllers;

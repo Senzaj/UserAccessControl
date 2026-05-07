@@ -1,4 +1,5 @@
 ﻿using UserManagementSystem.DTOs;
+using UserManagementSystem.DTOs.Authentication;
 
 namespace UserManagementSystem.Services.Interfaces;
 
