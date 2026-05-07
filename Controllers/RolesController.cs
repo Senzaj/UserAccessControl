@@ -9,11 +9,11 @@ namespace UserManagementSystem.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
 [PermissionAuthorize("Role", "Manage")]
+[Route("api/[controller]")]
 public class RolesController(AppDbContext dbContext): ControllerBase
 {
-    [HttpGet]
+    [HttpGet("getRoles")]
     [ProducesResponseType(200)]
     [ProducesResponseType(403)]
     [ProducesResponseType(404)]
@@ -31,7 +31,7 @@ public class RolesController(AppDbContext dbContext): ControllerBase
         }
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("getRole/{id:guid}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetRole(Guid id)
@@ -48,7 +48,7 @@ public class RolesController(AppDbContext dbContext): ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost("createRole")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> CreateRole(CreateRoleRequest request)
@@ -66,7 +66,7 @@ public class RolesController(AppDbContext dbContext): ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("deleteRole/{id:guid}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     public async Task<IActionResult> DeleteRole(Guid id)
@@ -84,7 +84,7 @@ public class RolesController(AppDbContext dbContext): ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpGet("getPermissions")]
     public async Task<IActionResult> GetPermissions()
     {
         try
@@ -100,7 +100,7 @@ public class RolesController(AppDbContext dbContext): ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost("setPermission")]
     public async Task<IActionResult> SetPermission(SetPermissionRequest request)
     {
         try
@@ -116,7 +116,7 @@ public class RolesController(AppDbContext dbContext): ControllerBase
         }
     }
     
-    [HttpDelete]
+    [HttpDelete("revokePermission")]
     public async Task<IActionResult> RevokePermission(RevokePermissionRequest request)
     {
         try
